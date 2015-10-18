@@ -30,8 +30,8 @@ async defer>
 var map;
 function mInitMap() {
     map = new google.maps.Map(document.getElementById('map'), {
-        center: {lat: -34.397, lng: 150.644},
-        zoom: 8
+        center: {lat: 0, lng: 0},
+        zoom: 2
     });
 }
 function initMap() {
@@ -85,19 +85,41 @@ var processReply = function(reply) {
         var lng = parseFloat(don['long']);
         var latLng = {lat: lat, lng: lng};
         var marker = new google.maps.Marker({
-position: latLng,
-        map: map,
-        title: 'Test'
+            position: latLng,
+            map: map,
+            title: 'Test'
+        });
+        var infoWindow;
+        (function(amnt) {
+            infoWindow = new google.maps.InfoWindow({
+                content: "$" + amnt
+            });
+        })(don.amount);
+        (function(marker, wdw) {
+            marker.addListener('click', function() {
+                    wdw.open(map, marker);
+            });
+        })(marker, infoWindow);
+        var cityCircle = new google.maps.Circle({
+            strokeColor: '#0000cd',
+            strokeOpacity: 1.0,
+            strokeWeight: 2,
+            fillColor: '#6495ed',
+            fillOpacity: 0.1,
+            map: map,
+            center: latLng,
+            radius: parseFloat(don.radius) 
         });
 
-    }
+}
 };
 
+setInterval(function() {
 $.ajax({
-        type: 'GET',
-        url: "http://jupiter.eecs.jacobs-university.de:1414",
-        data: payload,
-        cache: false,
+type: 'GET',
+url: "http://jupiter.eecs.jacobs-university.de:1414",
+data: payload,
+cache: false,
 success: function(response){
 $(this).addClass("done");
     console.log("Received server data");
@@ -107,6 +129,7 @@ error: function(xhr) {
     console.log("An error occurred");
 }
 });
+}, 2000);
 });
 </script>
 
