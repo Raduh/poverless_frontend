@@ -1,137 +1,56 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
 <head>
-<title>Simple Map</title>
-<meta name="viewport" content="initial-scale=1.0">
 <meta charset="utf-8">
-<style>
-html, body {
-    height: 100%;
-    margin: 0;
-    padding: 0;
-}
-#map {
-    height: 100%;
-}
-</style>
+<meta name="viewport" content="width=device-width, maximum-scale=1">
+
+<title>Homepage</title>
+<link rel="icon" href="poverless.png" type="image/png">
+<link rel="shortcut icon" href="favicon.ico" type="img/x-icon">
+
+<link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,800italic,700italic,600italic,400italic,300italic,800,700,600' rel='stylesheet' type='text/css'>
+
+<link href="css/bootstrap.css" rel="stylesheet" type="text/css">
+<link href="css/style.css" rel="stylesheet" type="text/css">
+<link href="css/font-awesome.css" rel="stylesheet" type="text/css">
+<link href="css/responsive.css" rel="stylesheet" type="text/css">
+<link href="css/animate.css" rel="stylesheet" type="text/css">
 </head>
 <body>
-<div
-    id="map">
+
+<div style="overflow:hidden;">
+<header class="header" id="header"><!--header-start-->
+
+	<div class="container">
+	
+    	<figure class="logo animated fadeInDown delay-05s">
+        	<a href="#">
+				<img src="poverless.png" alt="">
+			</a>
+        </figure>
+		<figure class="logo animated fadeInDown delay-07s">
+		
+		
+		</figure>
+		<img src="phone.png" align="right" width="210" height="390" style="text-align=right; padding-right=15px;">
+		
+        <h1 class="animated fadeInDown delay-07s">Poverless</h1>
+		
+		
+        <ul class="we-create animated fadeInUp delay-5s">
+        	<li>Anyone who has ever struggled with poverty <br>
+				knows how extremely expensive it is to be poor.<br>
+				So, why don't we help people in need <br>
+				from the little that we have ? <br></li>
+        </ul>
+		
+		
+            <a class="link animated fadeInUp delay-1s" href="map.html">See Statistics Map</a>
+    </div>
 </div>
-<script type="text/javascript"
-src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC7FH9MNR9puIihv8B2nVUT-5DVAVz8cuM&callback=initMap"
-async defer>
-</script>
-<script type="text/javascript" src="jquery-1.11.3.min.js"></script>
-
-<script>
-
-var map;
-function mInitMap() {
-    map = new google.maps.Map(document.getElementById('map'), {
-        center: {lat: 0, lng: 0},
-        zoom: 2
-    });
-}
-function initMap() {
-    $(document).ready(mInitMap);
-}
+</header><!--header-end-->
 
 </script>
-<script type="text/javascript">
-$(document).ready(function() {
-/*
-    Resolves a relative url
-    @param url  Url to resolve
-    @param base Optional. Base url to use. 
-    @param isDir    Optional. If set to true, will return a directory name ending with a slash. 
-*/
-var resolve = function(url, base, isDir){
- 
-    var resolveWithBase = false; 
-    var baseUrl, oldBase, newBase; 
- 
-    if(typeof base == "string"){
-        resolveWithBase = true; 
-        baseUrl = arguments.callee(base, true); 
-        oldBase = jQuery("base").detach(); 
-        newBase = jQuery("<base>").attr("href", baseUrl).appendTo("head"); 
-    }
- 
-    var el= document.createElement('div');
-    el.innerHTML= '<a href="'+jQuery('<span/>').text(url).html()+'">x</a>';
-    var url = el.firstChild.href;
-   
-    if(resolveWithBase){
-        newBase.remove(); 
-        oldBase.appendTo("head"); 
-    }
- 
-    if( (base === true || isDir === true ) && url[url.length - 1] != "/"){url = url + "/"; }
- 
-    return url; 
-}
-
-var query_url = resolve("php/proxy.php");
-var payload = {"type": 'G'};
-
-var processReply = function(reply) {
-    var donations = reply.donations;
-
-    for (var i in donations) {
-        var don = donations[i];
-        var lat = parseFloat(don.lat);
-        var lng = parseFloat(don['long']);
-        var latLng = {lat: lat, lng: lng};
-        var marker = new google.maps.Marker({
-            position: latLng,
-            map: map,
-            title: 'Test'
-        });
-        var infoWindow;
-        (function(amnt) {
-            infoWindow = new google.maps.InfoWindow({
-                content: "$" + amnt
-            });
-        })(don.amount);
-        (function(marker, wdw) {
-            marker.addListener('click', function() {
-                    wdw.open(map, marker);
-            });
-        })(marker, infoWindow);
-        var cityCircle = new google.maps.Circle({
-            strokeColor: '#0000cd',
-            strokeOpacity: 1.0,
-            strokeWeight: 2,
-            fillColor: '#6495ed',
-            fillOpacity: 0.1,
-            map: map,
-            center: latLng,
-            radius: parseFloat(don.radius) 
-        });
-
-}
-};
-
-setInterval(function() {
-$.ajax({
-type: 'GET',
-url: "http://jupiter.eecs.jacobs-university.de:1414",
-data: payload,
-cache: false,
-success: function(response){
-$(this).addClass("done");
-    console.log("Received server data");
-    processReply(response);
-},
-error: function(xhr) {
-    console.log("An error occurred");
-}
-});
-}, 2000);
-});
-</script>
-
 </body>
 </html>
